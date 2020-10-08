@@ -1,14 +1,14 @@
 package com.eti.pg;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 public class User {
     String login;
     LocalDate employmentDate;
