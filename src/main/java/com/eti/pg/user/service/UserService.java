@@ -52,4 +52,13 @@ public class UserService {
             }
         });
     }
+
+    public void deleteAvatar(Long id) {
+        userRepository.find(id).ifPresent(user -> {
+                var file = new File(String.format("%s//%s.png", filePath, user.getLogin()));
+                file.delete();
+                user.setAvatarPath(file.getAbsolutePath());
+                userRepository.update(user);
+        });
+    }
 }

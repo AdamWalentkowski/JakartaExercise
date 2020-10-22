@@ -73,6 +73,66 @@ public class AvatarServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = ServletUtility.parseRequestPath(request);
+        String servletPath = request.getServletPath();
+        if (Paths.AVATARS.equals(servletPath)) {
+            if (path.matches(Patterns.AVATAR)) {
+                putAvatar(request, response);
+                return;
+            }
+        }
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = ServletUtility.parseRequestPath(request);
+        String servletPath = request.getServletPath();
+        if (Paths.AVATARS.equals(servletPath)) {
+            if (path.matches(Patterns.AVATAR)) {
+                deleteAvatar(request, response);
+                return;
+            }
+        }
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+
+    private void deleteAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+        Optional<User> user = userService.findUserById(id);
+
+        if (user.isPresent()) {
+            if (user.get().getAvatarPath() != null) {
+                userService.deleteAvatar(id);
+            }
+            else {
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }
+        }
+        else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    private void putAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+        Optional<User> user = userService.findUserById(id);
+
+        if (user.isPresent()) {
+            Part avatar = request.getPart(Parameters.AVATAR);
+            if (avatar != null) {
+                userService.addAvatar(id, avatar.getInputStream());
+            }
+            else {
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
     private void postAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
         Optional<User> user = userService.findUserById(id);
@@ -82,7 +142,9 @@ public class AvatarServlet extends HttpServlet {
                 if (avatar != null) {
                     userService.addAvatar(id, avatar.getInputStream());
                 }
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                else {
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                }
             }
             else {
                 response.sendError(HttpServletResponse.SC_CONFLICT);
@@ -93,14 +155,20 @@ public class AvatarServlet extends HttpServlet {
         }
 
     }
+
     private void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
         Optional<User> user = userService.findUserById(id);
 
         if (user.isPresent()) {
-            response.addHeader(HttpHeaders.CONTENT_TYPE, "image/png");
-            response.setContentLength(FileUtils.readFileToByteArray(new File(user.get().getAvatarPath())).length);
-            response.getOutputStream().write(FileUtils.readFileToByteArray(new File(user.get().getAvatarPath())));
+            if (user.get().getAvatarPath() != null) {
+                response.addHeader(HttpHeaders.CONTENT_TYPE, "image/png");
+                response.setContentLength(FileUtils.readFileToByteArray(new File(user.get().getAvatarPath())).length);
+                response.getOutputStream().write(FileUtils.readFileToByteArray(new File(user.get().getAvatarPath())));
+            }
+            else {
+                response.sendError(HttpServletResponse.SC_NO_CONTENT);
+            }
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
