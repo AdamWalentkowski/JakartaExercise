@@ -3,7 +3,9 @@ package com.eti.pg.user.entity;
 import com.eti.pg.Role;
 import lombok.*;
 
+import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 @Getter
@@ -18,5 +20,5 @@ public class User implements Serializable {
     private String lastName;
     private LocalDate employmentDate;
     private Role role;
-    private byte[] avatar;
+    private String avatarPath;
 }

@@ -17,4 +17,17 @@ GET http://localhost:9080/jakarta-exercise/api/users/0
 ###
 
 GET http://localhost:9080/jakarta-exercise/api/users
+###
+
+POST http://localhost:9080/jakarta-exercise/api/avatars/1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="1.png'
+
+< ../../src/main/resources/1.png
+--boundary--
+
+###
+
 
