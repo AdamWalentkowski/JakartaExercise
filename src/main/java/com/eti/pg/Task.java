@@ -1,5 +1,6 @@
 package com.eti.pg;
 
+import com.eti.pg.user.entity.User;
 import lombok.*;
 
 import java.time.LocalDate;
