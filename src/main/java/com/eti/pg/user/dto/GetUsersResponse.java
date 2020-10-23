@@ -10,8 +10,6 @@ import java.util.function.Function;
 @Getter
 @Setter
 @Builder
-//@NoArgsConstructor
-//@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
 public class GetUsersResponse {

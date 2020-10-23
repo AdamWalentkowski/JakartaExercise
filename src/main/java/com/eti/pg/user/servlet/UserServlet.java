@@ -9,7 +9,6 @@ import com.eti.pg.utils.ServletUtility;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +47,7 @@ public class UserServlet extends HttpServlet {
                 getUser(request, response);
                 return;
             } else if (path.matches(Patterns.USERS)) {
-                getUsers(request, response);
+                getUsers(response);
                 return;
             }
         }
@@ -62,12 +61,12 @@ public class UserServlet extends HttpServlet {
         if (user.isPresent()) {
             response.getWriter()
                     .write(jsonb.toJson(GetUserResponse.entityToDtoMapper().apply(user.get())));
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
-    private void getUsers(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void getUsers(HttpServletResponse response) throws IOException {
         response.getWriter()
                 .write(jsonb.toJson(GetUsersResponse.entityToDtoMapper().apply(userService.findAllUsers())));
     }

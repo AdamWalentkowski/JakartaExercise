@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Dependent
 public class UserRepository implements Repository<User, Long> {
-    private DataStore dataStore;
+    private final DataStore dataStore;
 
     @Inject
     public UserRepository(DataStore dataStore) {

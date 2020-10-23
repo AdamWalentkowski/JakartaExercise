@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class DataStore {
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     public synchronized Optional<User> findUser(Long id) {
         return users.stream()

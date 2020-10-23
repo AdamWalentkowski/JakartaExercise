@@ -3,6 +3,7 @@ package com.eti.pg.user.service;
 import com.eti.pg.user.entity.User;
 import com.eti.pg.user.repository.UserRepository;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -11,9 +12,12 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @ApplicationScoped
 @NoArgsConstructor
 public class UserService {
@@ -55,10 +59,13 @@ public class UserService {
 
     public void deleteAvatar(Long id) {
         userRepository.find(id).ifPresent(user -> {
-                var file = new File(String.format("%s//%s.png", filePath, user.getLogin()));
-                file.delete();
-                user.setAvatarPath(file.getAbsolutePath());
+            try {
+                Files.delete(Path.of(String.format("%s//%s.png", filePath, user.getLogin())));
+                user.setAvatarPath(null);
                 userRepository.update(user);
+            } catch (IOException ex) {
+                log.error(ex.getMessage(), ex);
+            }
         });
     }
 }
