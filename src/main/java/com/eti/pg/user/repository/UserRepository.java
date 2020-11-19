@@ -1,6 +1,7 @@
 package com.eti.pg.user.repository;
 
 import com.eti.pg.db.DataStore;
+import com.eti.pg.repository.Repository;
 import com.eti.pg.user.entity.User;
 
 import javax.enterprise.context.Dependent;

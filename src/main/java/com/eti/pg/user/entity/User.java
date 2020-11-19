@@ -1,11 +1,9 @@
 package com.eti.pg.user.entity;
 
-import com.eti.pg.Role;
+import com.eti.pg.board.Role;
 import lombok.*;
 
-import java.io.File;
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.time.LocalDate;
 
 @Getter

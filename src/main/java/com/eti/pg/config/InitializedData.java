@@ -1,6 +1,11 @@
 package com.eti.pg.config;
 
-import com.eti.pg.Role;
+import com.eti.pg.board.BoardScope;
+import com.eti.pg.board.Role;
+import com.eti.pg.board.entity.Board;
+import com.eti.pg.board.service.BoardService;
+import com.eti.pg.task.entity.Task;
+import com.eti.pg.task.service.TaskService;
 import com.eti.pg.user.entity.User;
 import com.eti.pg.user.service.UserService;
 
@@ -14,10 +19,14 @@ import java.util.Arrays;
 @ApplicationScoped
 public class InitializedData {
     private final UserService userService;
+    private final BoardService boardService;
+    private final TaskService taskService;
 
     @Inject
-    public InitializedData(UserService userService) {
+    public InitializedData(UserService userService, BoardService boardService, TaskService taskService) {
         this.userService = userService;
+        this.boardService = boardService;
+        this.taskService = taskService;
     }
 
     public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
@@ -55,6 +64,55 @@ public class InitializedData {
                     .role(Role.DEVELOPER)
                     .build()
         );
+
+        var initBoards = Arrays.asList(
+            Board.builder()
+                    .title("Game")
+                    .boardScope(BoardScope.GROUP)
+                    .isPrivate(false)
+                    .build(),
+            Board.builder()
+                    .title("GameComponent1")
+                    .boardScope(BoardScope.PROJECT)
+                    .isPrivate(false)
+                    .build(),
+            Board.builder()
+                    .title("GameComponent2")
+                    .boardScope(BoardScope.PROJECT)
+                    .isPrivate(false)
+                    .build()
+        );
+
         initUsers.forEach(userService::create);
+        initBoards.forEach(boardService::create);
+
+        var initTasks = Arrays.asList(
+                Task.builder()
+                        .title("Zrób to")
+                        .description("coś tam coś tam")
+                        .priority(5)
+                        .creationDate(LocalDate.now())
+                        .board(boardService.findBoardById(1L).orElseThrow())
+                        .user(null)
+                        .build(),
+                Task.builder()
+                        .title("Zrób tamto")
+                        .description("bla bla bla")
+                        .priority(3)
+                        .creationDate(LocalDate.now())
+                        .board(boardService.findBoardById(1L).orElseThrow())
+                        .user(null)
+                        .build(),
+                Task.builder()
+                        .title("Zrób jeszcze to")
+                        .description("xyz xyz")
+                        .priority(2)
+                        .creationDate(LocalDate.now())
+                        .board(boardService.findBoardById(2L).orElseThrow())
+                        .user(null)
+                        .build()
+        );
+
+        initTasks.forEach(taskService::create);
     }
 }

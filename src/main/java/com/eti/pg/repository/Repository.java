@@ -1,4 +1,4 @@
-package com.eti.pg.user.repository;
+package com.eti.pg.repository;
 
 import java.util.List;
 import java.util.Optional;
