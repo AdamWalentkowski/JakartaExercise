@@ -1,45 +1,50 @@
 package com.eti.pg.user.repository;
 
-import com.eti.pg.db.DataStore;
+import com.eti.pg.board.entity.Board;
 import com.eti.pg.repository.Repository;
 import com.eti.pg.user.entity.User;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@Dependent
+@RequestScoped
 public class UserRepository implements Repository<User, Long> {
-    private final DataStore dataStore;
+    private EntityManager em;
 
-    @Inject
-    public UserRepository(DataStore dataStore) {
-        this.dataStore = dataStore;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     public Optional<User> find(Long id) {
-        return dataStore.findUser(id);
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
     @Override
     public List<User> findAll() {
-        return dataStore.findAllUsers();
+        return em.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
     public void create(User entity) {
-        dataStore.createUser(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(User entity) {
-        //TODO: next exercise
-        throw new UnsupportedOperationException("Operation not implemented.");
+        em.remove(em.find(Board.class, entity.getId()));
     }
 
     @Override
     public void update(User entity) {
-        dataStore.updateUser(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(User entity) {
+        em.detach(entity);
     }
 }

@@ -9,6 +9,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,29 +41,30 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public void createUser(User user) {
         userRepository.create(user);
     }
 
+    @Transactional
     public void addAvatar(Long id, InputStream inputStream) {
         userRepository.find(id).ifPresent(user -> {
             try {
                 var file = new File(String.format("%s//%s.png", filePath, user.getLogin()));
                 FileUtils.copyInputStreamToFile(inputStream, file);
                 user.setAvatarPath(file.getAbsolutePath());
-                userRepository.update(user);
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
         });
     }
 
+    @Transactional
     public void deleteAvatar(Long id) {
         userRepository.find(id).ifPresent(user -> {
             try {
                 Files.delete(Path.of(String.format("%s//%s.png", filePath, user.getLogin())));
                 user.setAvatarPath(null);
-                userRepository.update(user);
             } catch (IOException ex) {
                 log.error(ex.getMessage(), ex);
             }

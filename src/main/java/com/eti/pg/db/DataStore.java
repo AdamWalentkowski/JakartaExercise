@@ -174,6 +174,7 @@ public class DataStore {
                             String.format("The task with id \"%d\" does not exist", task.getId()));
                 });
     }
+
     public List<Task> findTasksByBoardId(Long id) {
         return findBoard(id)
                 .map(board -> tasks.stream()

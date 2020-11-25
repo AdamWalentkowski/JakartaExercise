@@ -9,5 +9,5 @@ public interface Repository<E, K> {
     void create(E entity);
     void delete(E entity);
     void update(E entity);
-
+    void detach(E entity);
 }

@@ -1,58 +1,75 @@
 package com.eti.pg.task.repository;
 
-import com.eti.pg.db.DataStore;
 import com.eti.pg.repository.Repository;
 import com.eti.pg.task.entity.Task;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@Dependent
+@RequestScoped
 public class TaskRepository implements Repository<Task, Long> {
-    private final DataStore dataStore;
+    private EntityManager em;
 
-    @Inject
-    public TaskRepository(DataStore dataStore) {
-        this.dataStore = dataStore;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public Optional<Task> find(Long id) {
-        return dataStore.findTask(id);
+        return Optional.ofNullable(em.find(Task.class, id));
     }
 
     @Override
     public List<Task> findAll() {
-        //TODO: next exercise
-        throw new UnsupportedOperationException("Operation not implemented.");
+        return em.createQuery("select t from Task t", Task.class).getResultList();
     }
 
     @Override
     public void create(Task entity) {
-        dataStore.createTask(entity);
+        em.persist(entity);
     }
 
     @Override
     public void delete(Task entity) {
-        dataStore.deleteTask(entity.getId());
+        em.remove(em.find(Task.class, entity.getId()));
     }
 
     @Override
     public void update(Task entity) {
-        dataStore.updateTask(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    public void detach(Task entity) {
+        em.detach(entity);
     }
 
     public List<Task> findByBoardId(Long id) {
-        return dataStore.findTasksByBoardId(id);
+        return em.createQuery("select t from Task t where t.board.id = :id", Task.class)
+                .setParameter("id", id)
+                .getResultList();
     }
 
     public List<Task> findByBoardName(String boardName) {
-        return dataStore.findTasksByBoardName(boardName);
+        return em.createQuery("select t from Task t where t.board.title = :boardName", Task.class)
+                .setParameter("boardName", boardName)
+                .getResultList();
     }
 
     public Optional<Task> findByIdAndBoardName(Long id, String boardName) {
-        return dataStore.findTask(id, boardName);
+        try {
+            return Optional.ofNullable(
+                    em.createQuery("select t from Task t where t.id = :id and t.board.title = :boardName", Task.class)
+                            .setParameter("id", id)
+                            .setParameter("boardName", boardName)
+                            .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 }

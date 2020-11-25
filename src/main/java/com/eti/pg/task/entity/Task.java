@@ -1,9 +1,9 @@
 package com.eti.pg.task.entity;
 
 import com.eti.pg.board.entity.Board;
-import com.eti.pg.user.entity.User;
 import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -12,12 +12,23 @@ import java.time.LocalDate;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "tasks")
 public class Task implements Serializable {
+    @Id
     private Long id;
     private String title;
     private String description;
     private Integer priority;
+    @Column(name = "creation_date")
     private LocalDate creationDate;
+    @ManyToOne
+    @JoinColumn(name = "board")
     private Board board;
-    private User user;
+    //TODO: next exercise
+//    @ManyToOne
+//    @JoinColumn(name = "user")
+//    private User user;
 }

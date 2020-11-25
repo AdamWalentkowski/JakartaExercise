@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,19 +28,22 @@ public class BoardService {
         return boardRepository.find(id);
     }
 
-    public void deleteBoard(Long id) {
-        boardRepository.delete(boardRepository.find(id).orElseThrow());
+    public Optional<Board> findBoardByName(String boardName) {
+        return boardRepository.find(boardName);
     }
 
+    @Transactional
     public void createBoard(Board board) {
         boardRepository.create(board);
     }
 
-    public void updateBoard(Board board) {
-        boardRepository.update(board);
+    @Transactional
+    public void deleteBoard(Long id) {
+        boardRepository.delete(boardRepository.find(id).orElseThrow());
     }
 
-    public Optional<Board> findBoardByName(String boardName) {
-        return boardRepository.find(boardName);
+    @Transactional
+    public void updateBoard(Board board) {
+        boardRepository.update(board);
     }
 }

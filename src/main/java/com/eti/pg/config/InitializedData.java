@@ -11,6 +11,7 @@ import com.eti.pg.user.service.UserService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
+import javax.enterprise.context.control.RequestContextController;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.time.LocalDate;
@@ -21,12 +22,17 @@ public class InitializedData {
     private final UserService userService;
     private final BoardService boardService;
     private final TaskService taskService;
+    private final RequestContextController requestContextController;
 
     @Inject
-    public InitializedData(UserService userService, BoardService boardService, TaskService taskService) {
+    public InitializedData(UserService userService,
+                           BoardService boardService,
+                           TaskService taskService,
+                           RequestContextController requestContextController) {
         this.userService = userService;
         this.boardService = boardService;
         this.taskService = taskService;
+        this.requestContextController = requestContextController;
     }
 
     public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
@@ -34,6 +40,8 @@ public class InitializedData {
     }
 
     private synchronized void init() {
+        requestContextController.activate();
+
         var initUsers = Arrays.asList(
             User.builder()
                     .login("lordofon1X1")
@@ -93,7 +101,7 @@ public class InitializedData {
                         .priority(5)
                         .creationDate(LocalDate.now())
                         .board(boardService.findBoardById(1L).orElseThrow())
-                        .user(null)
+//                        .user(null)
                         .build(),
                 Task.builder()
                         .title("Zrób tamto")
@@ -101,7 +109,7 @@ public class InitializedData {
                         .priority(3)
                         .creationDate(LocalDate.now())
                         .board(boardService.findBoardById(1L).orElseThrow())
-                        .user(null)
+//                        .user(null)
                         .build(),
                 Task.builder()
                         .title("Zrób jeszcze to")
@@ -109,10 +117,11 @@ public class InitializedData {
                         .priority(2)
                         .creationDate(LocalDate.now())
                         .board(boardService.findBoardById(2L).orElseThrow())
-                        .user(null)
+//                        .user(null)
                         .build()
         );
-
         initTasks.forEach(taskService::createTask);
+
+        requestContextController.deactivate();
     }
 }
