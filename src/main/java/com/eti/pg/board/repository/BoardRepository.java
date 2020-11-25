@@ -40,7 +40,10 @@ public class BoardRepository implements Repository<Board, Long> {
 
     @Override
     public void update(Board entity) {
-        //TODO: next exercise
-        throw new UnsupportedOperationException("Operation not implemented.");
+        dataStore.updateBoard(entity);
+    }
+
+    public Optional<Board> find(String boardName) {
+        return dataStore.findBoard(boardName);
     }
 }

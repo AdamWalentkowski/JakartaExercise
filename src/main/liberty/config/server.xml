@@ -8,5 +8,7 @@
         <feature>jsp-2.3</feature>
         <feature>el-3.0</feature>
         <feature>mpConfig-1.4</feature>
+        <feature>jaxrs-2.1</feature>
+
     </featureManager>
 </server>

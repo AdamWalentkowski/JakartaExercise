@@ -98,7 +98,7 @@ public class AvatarServlet extends HttpServlet {
 
     private void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = userService.findUserById(id);
+        var user = userService.findUserById(id);
 
         if (user.isPresent()) {
             if (user.get().getAvatarPath() != null) {
@@ -115,7 +115,7 @@ public class AvatarServlet extends HttpServlet {
 
     private void postAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = userService.findUserById(id);
+        var user = userService.findUserById(id);
         if (user.isPresent()) {
             if (user.get().getAvatarPath() == null) {
                 Part avatar = request.getPart(Parameters.AVATAR);
@@ -134,7 +134,7 @@ public class AvatarServlet extends HttpServlet {
 
     private void putAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = userService.findUserById(id);
+        var user = userService.findUserById(id);
 
         if (user.isPresent()) {
             Part avatar = request.getPart(Parameters.AVATAR);
@@ -150,7 +150,7 @@ public class AvatarServlet extends HttpServlet {
 
     private void deleteAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = userService.findUserById(id);
+        var user = userService.findUserById(id);
 
         if (user.isPresent()) {
             if (user.get().getAvatarPath() != null) {

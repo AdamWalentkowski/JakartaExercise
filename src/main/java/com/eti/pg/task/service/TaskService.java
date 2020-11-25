@@ -25,11 +25,19 @@ public class TaskService {
         return taskRepository.findByBoardId(id);
     }
 
+    public List<Task> findTasksByBoardName(String boardName) {
+        return taskRepository.findByBoardName(boardName);
+    }
+
+    public Optional<Task> findTaskByIdAndBoardName(Long id, String boardName) {
+        return taskRepository.findByIdAndBoardName(id, boardName);
+    }
+
     public Optional<Task> findTaskById(Long id) {
         return taskRepository.find(id);
     }
 
-    public void create(Task task) {
+    public void createTask(Task task) {
         taskRepository.create(task);
     }
 
@@ -37,7 +45,7 @@ public class TaskService {
         taskRepository.delete(taskRepository.find(id).orElseThrow());
     }
 
-    public void update(Task task) {
+    public void updateTask(Task task) {
         taskRepository.update(task);
     }
 }

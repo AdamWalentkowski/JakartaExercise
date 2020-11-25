@@ -101,18 +101,19 @@ public class DataStore {
                 });
     }
 
-    public List<Task> findTasksByBoardId(Long id) {
-        return findBoard(id)
-                .map(board -> tasks.stream()
-                        .filter(task -> task.getBoard().getTitle().equals(board.getTitle()))
-                        .map(CloningUtility::clone)
-                        .collect(Collectors.toList()))
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("The board with id \"%d\" does not exist", id)));
+    public void updateBoard(Board board) {
+        findBoard(board.getId()).ifPresentOrElse(
+                original -> {
+                    boards.remove(original);
+                    boards.add(board);
+                },
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The task with id \"%d\" does not exist", board.getId()));
+                });
     }
 
 //TASK METHODS
-
     public synchronized Optional<Task> findTask(Long id) {
         return tasks.stream()
                 .filter(task -> task.getId().equals(id))
@@ -123,6 +124,14 @@ public class DataStore {
     public synchronized Optional<Task> findTask(String taskTitle, String boardTitle) {
         return tasks.stream()
                 .filter(task -> task.getTitle().equals(taskTitle) &&
+                        task.getBoard().getTitle().equals(boardTitle))
+                .findFirst()
+                .map(CloningUtility::clone);
+    }
+
+    public synchronized Optional<Task> findTask(Long id, String boardTitle) {
+        return tasks.stream()
+                .filter(task -> task.getId().equals(id) &&
                         task.getBoard().getTitle().equals(boardTitle))
                 .findFirst()
                 .map(CloningUtility::clone);
@@ -164,5 +173,24 @@ public class DataStore {
                     throw new IllegalArgumentException(
                             String.format("The task with id \"%d\" does not exist", task.getId()));
                 });
+    }
+    public List<Task> findTasksByBoardId(Long id) {
+        return findBoard(id)
+                .map(board -> tasks.stream()
+                        .filter(task -> task.getBoard().getTitle().equals(board.getTitle()))
+                        .map(CloningUtility::clone)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("The board with id \"%d\" does not exist", id)));
+    }
+
+    public List<Task> findTasksByBoardName(String boardName) {
+        return findBoard(boardName)
+                .map(board -> tasks.stream()
+                        .filter(task -> task.getBoard().getTitle().equals(board.getTitle()))
+                        .map(CloningUtility::clone)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("The board with id \"%s\" does not exist", boardName)));
     }
 }

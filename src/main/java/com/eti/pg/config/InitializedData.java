@@ -83,8 +83,8 @@ public class InitializedData {
                     .build()
         );
 
-        initUsers.forEach(userService::create);
-        initBoards.forEach(boardService::create);
+        initUsers.forEach(userService::createUser);
+        initBoards.forEach(boardService::createBoard);
 
         var initTasks = Arrays.asList(
                 Task.builder()
@@ -113,6 +113,6 @@ public class InitializedData {
                         .build()
         );
 
-        initTasks.forEach(taskService::create);
+        initTasks.forEach(taskService::createTask);
     }
 }

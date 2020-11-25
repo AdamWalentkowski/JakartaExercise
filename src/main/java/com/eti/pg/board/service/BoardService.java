@@ -31,7 +31,15 @@ public class BoardService {
         boardRepository.delete(boardRepository.find(id).orElseThrow());
     }
 
-    public void create(Board board) {
+    public void createBoard(Board board) {
         boardRepository.create(board);
+    }
+
+    public void updateBoard(Board board) {
+        boardRepository.update(board);
+    }
+
+    public Optional<Board> findBoardByName(String boardName) {
+        return boardRepository.find(boardName);
     }
 }

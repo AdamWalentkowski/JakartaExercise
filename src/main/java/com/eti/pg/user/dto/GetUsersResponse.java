@@ -32,6 +32,4 @@ public class GetUsersResponse {
             return response.build();
         };
     }
-
-
 }

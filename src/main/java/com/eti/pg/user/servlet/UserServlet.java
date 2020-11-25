@@ -40,8 +40,8 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String path = ServletUtility.parseRequestPath(request);
-        String servletPath = request.getServletPath();
+        var path = ServletUtility.parseRequestPath(request);
+        var servletPath = request.getServletPath();
         if (Paths.USERS.equals(servletPath)) {
             if (path.matches(Patterns.USER)) {
                 getUser(request, response);
@@ -55,8 +55,8 @@ public class UserServlet extends HttpServlet {
     }
 
     private void getUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        Optional<User> user = userService.findUserById(id);
+        var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
+        var user = userService.findUserById(id);
 
         if (user.isPresent()) {
             response.getWriter()

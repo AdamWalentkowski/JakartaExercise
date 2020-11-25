@@ -39,7 +39,7 @@ public class TaskCreation implements Serializable {
     }
 
     public String createTaskAction() {
-        taskService.create(TaskCreationModel.modelToEntityMapper().apply(taskCreationModel));
+        taskService.createTask(TaskCreationModel.modelToEntityMapper().apply(taskCreationModel));
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }

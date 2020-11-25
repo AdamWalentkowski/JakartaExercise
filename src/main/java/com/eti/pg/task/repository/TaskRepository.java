@@ -47,4 +47,12 @@ public class TaskRepository implements Repository<Task, Long> {
     public List<Task> findByBoardId(Long id) {
         return dataStore.findTasksByBoardId(id);
     }
+
+    public List<Task> findByBoardName(String boardName) {
+        return dataStore.findTasksByBoardName(boardName);
+    }
+
+    public Optional<Task> findByIdAndBoardName(Long id, String boardName) {
+        return dataStore.findTask(id, boardName);
+    }
 }

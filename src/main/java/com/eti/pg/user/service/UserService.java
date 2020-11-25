@@ -40,7 +40,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void create(User user) {
+    public void createUser(User user) {
         userRepository.create(user);
     }
 
