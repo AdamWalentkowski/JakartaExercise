@@ -5,6 +5,7 @@ import com.eti.pg.user.service.UserService;
 import com.eti.pg.utils.ServletUtility;
 import org.apache.commons.io.FileUtils;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -25,10 +26,10 @@ import java.util.Optional;
 
 
 public class AvatarServlet extends HttpServlet {
-    private final UserService userService;
+    private UserService userService;
 
-    @Inject
-    public AvatarServlet(UserService userService) {
+    @EJB
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 

@@ -1,8 +1,5 @@
 package com.eti.pg.task.controller;
 
-import com.eti.pg.board.dto.CreateBoardRequest;
-import com.eti.pg.board.dto.GetBoardResponse;
-import com.eti.pg.board.dto.UpdateBoardRequest;
 import com.eti.pg.board.service.BoardService;
 import com.eti.pg.serialization.CloningUtility;
 import com.eti.pg.task.dto.CreateTaskRequest;
@@ -12,7 +9,7 @@ import com.eti.pg.task.dto.UpdateTaskRequest;
 import com.eti.pg.task.service.TaskService;
 
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,12 +25,12 @@ public class TaskController {
     public TaskController() {
     }
 
-    @Inject
+    @EJB
     public void setBoardService(BoardService boardService) {
         this.boardService = boardService;
     }
 
-    @Inject
+    @EJB
     public void setTaskService(TaskService taskService) {
         this.taskService = taskService;
     }

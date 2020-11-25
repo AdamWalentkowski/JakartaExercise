@@ -9,7 +9,7 @@ import com.eti.pg.serialization.CloningUtility;
 import com.eti.pg.task.service.TaskService;
 
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,12 +25,12 @@ public class BoardController {
     public BoardController() {
     }
 
-    @Inject
+    @EJB
     public void setBoardService(BoardService boardService) {
         this.boardService = boardService;
     }
 
-    @Inject
+    @EJB
     public void setTaskService(TaskService taskService) {
         this.taskService = taskService;
     }

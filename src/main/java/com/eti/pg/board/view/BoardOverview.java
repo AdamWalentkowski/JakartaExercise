@@ -6,6 +6,7 @@ import com.eti.pg.task.service.TaskService;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -17,21 +18,25 @@ import java.io.Serializable;
 @ViewScoped
 @Named
 public class BoardOverview implements Serializable {
-    private final BoardService boardService;
-    private final TaskService taskService;
+    private BoardService boardService;
+    private TaskService taskService;
+
+    @EJB
+    public void setBoardService(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
+    @EJB
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
     @Getter
     private BoardOverviewModel boardOverviewModel;
 
     @Setter
     @Getter
     private Long id;
-
-
-    @Inject
-    public BoardOverview(BoardService boardService, TaskService taskService) {
-        this.boardService = boardService;
-        this.taskService = taskService;
-    }
 
     public void init() throws IOException {
         var board = boardService.findBoardById(id);

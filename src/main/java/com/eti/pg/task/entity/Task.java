@@ -1,6 +1,7 @@
 package com.eti.pg.task.entity;
 
 import com.eti.pg.board.entity.Board;
+import com.eti.pg.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,8 +28,7 @@ public class Task implements Serializable {
     @ManyToOne
     @JoinColumn(name = "board")
     private Board board;
-    //TODO: next exercise
-//    @ManyToOne
-//    @JoinColumn(name = "user")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
 }

@@ -7,7 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.io.File;
@@ -19,7 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@ApplicationScoped
+@Stateless
+@LocalBean
 @NoArgsConstructor
 public class UserService {
     private UserRepository userRepository;
@@ -41,12 +43,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @Transactional
     public void createUser(User user) {
         userRepository.create(user);
     }
 
-    @Transactional
     public void addAvatar(Long id, InputStream inputStream) {
         userRepository.find(id).ifPresent(user -> {
             try {
@@ -59,7 +59,6 @@ public class UserService {
         });
     }
 
-    @Transactional
     public void deleteAvatar(Long id) {
         userRepository.find(id).ifPresent(user -> {
             try {

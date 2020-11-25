@@ -10,6 +10,7 @@
         <feature>mpConfig-1.4</feature>
         <feature>jaxrs-2.1</feature>
         <feature>jpa-2.2</feature>
+        <feature>ejb-3.2</feature>
     </featureManager>
 
     <dataSource id="JakartaExerciseBoardsDataSource" jndiName="jdbc/JakartaExerciseBoards">

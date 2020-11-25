@@ -3,14 +3,14 @@ package com.eti.pg.board.repository;
 import com.eti.pg.board.entity.Board;
 import com.eti.pg.repository.Repository;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@RequestScoped
+@Dependent
 public class BoardRepository implements Repository<Board, Long> {
     private EntityManager em;
 

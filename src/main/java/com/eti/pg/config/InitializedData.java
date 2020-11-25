@@ -3,45 +3,30 @@ package com.eti.pg.config;
 import com.eti.pg.board.BoardScope;
 import com.eti.pg.board.Role;
 import com.eti.pg.board.entity.Board;
-import com.eti.pg.board.service.BoardService;
 import com.eti.pg.task.entity.Task;
-import com.eti.pg.task.service.TaskService;
 import com.eti.pg.user.entity.User;
-import com.eti.pg.user.service.UserService;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
-import javax.enterprise.context.control.RequestContextController;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
+import javax.ejb.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-@ApplicationScoped
+@Singleton
+@Startup
 public class InitializedData {
-    private final UserService userService;
-    private final BoardService boardService;
-    private final TaskService taskService;
-    private final RequestContextController requestContextController;
+    private EntityManager em;
 
-    @Inject
-    public InitializedData(UserService userService,
-                           BoardService boardService,
-                           TaskService taskService,
-                           RequestContextController requestContextController) {
-        this.userService = userService;
-        this.boardService = boardService;
-        this.taskService = taskService;
-        this.requestContextController = requestContextController;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+    public InitializedData() {
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
-    }
-
+    @PostConstruct
     private synchronized void init() {
-        requestContextController.activate();
-
         var initUsers = Arrays.asList(
             User.builder()
                     .login("lordofon1X1")
@@ -72,6 +57,7 @@ public class InitializedData {
                     .role(Role.DEVELOPER)
                     .build()
         );
+        initUsers.forEach(em::persist);
 
         var initBoards = Arrays.asList(
             Board.builder()
@@ -90,9 +76,7 @@ public class InitializedData {
                     .isPrivate(false)
                     .build()
         );
-
-        initUsers.forEach(userService::createUser);
-        initBoards.forEach(boardService::createBoard);
+        initBoards.forEach(em::persist);
 
         var initTasks = Arrays.asList(
                 Task.builder()
@@ -100,28 +84,26 @@ public class InitializedData {
                         .description("coś tam coś tam")
                         .priority(5)
                         .creationDate(LocalDate.now())
-                        .board(boardService.findBoardById(1L).orElseThrow())
-//                        .user(null)
+                        .board(initBoards.get(0))
+                        .user(initUsers.get(0))
                         .build(),
                 Task.builder()
                         .title("Zrób tamto")
                         .description("bla bla bla")
                         .priority(3)
                         .creationDate(LocalDate.now())
-                        .board(boardService.findBoardById(1L).orElseThrow())
-//                        .user(null)
+                        .board(initBoards.get(0))
+                        .user(initUsers.get(1))
                         .build(),
                 Task.builder()
                         .title("Zrób jeszcze to")
                         .description("xyz xyz")
                         .priority(2)
                         .creationDate(LocalDate.now())
-                        .board(boardService.findBoardById(2L).orElseThrow())
-//                        .user(null)
+                        .board(initBoards.get(1))
+                        .user(initUsers.get(2))
                         .build()
         );
-        initTasks.forEach(taskService::createTask);
-
-        requestContextController.deactivate();
+        initTasks.forEach(em::persist);
     }
 }

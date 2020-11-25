@@ -4,13 +4,14 @@ import com.eti.pg.board.entity.Board;
 import com.eti.pg.board.repository.BoardRepository;
 import lombok.NoArgsConstructor;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@ApplicationScoped
+@Stateless
+@LocalBean
 @NoArgsConstructor
 public class BoardService {
     private BoardRepository boardRepository;
@@ -32,17 +33,14 @@ public class BoardService {
         return boardRepository.find(boardName);
     }
 
-    @Transactional
     public void createBoard(Board board) {
         boardRepository.create(board);
     }
 
-    @Transactional
     public void deleteBoard(Long id) {
         boardRepository.delete(boardRepository.find(id).orElseThrow());
     }
 
-    @Transactional
     public void updateBoard(Board board) {
         boardRepository.update(board);
     }

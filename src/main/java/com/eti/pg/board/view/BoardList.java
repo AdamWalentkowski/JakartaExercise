@@ -4,6 +4,7 @@ import com.eti.pg.board.model.BoardListModel;
 import com.eti.pg.board.service.BoardService;
 import com.eti.pg.task.service.TaskService;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -11,15 +12,20 @@ import javax.inject.Named;
 @RequestScoped
 @Named
 public class BoardList {
-    private final BoardService boardService;
-    private final TaskService taskService;
+    private  BoardService boardService;
+    private  TaskService taskService;
     private BoardListModel boardListModel;
 
-    @Inject
-    public BoardList(BoardService boardService, TaskService taskService) {
+    @EJB
+    public void setBoardService(BoardService boardService) {
         this.boardService = boardService;
+    }
+
+    @EJB
+    public void setTaskService(TaskService taskService) {
         this.taskService = taskService;
     }
+
 
     public BoardListModel getBoardList() {
         if (boardListModel == null) {
@@ -33,4 +39,6 @@ public class BoardList {
         boardService.deleteBoard(id);
         return "board_list?faces-redirect=true";
     }
+
+
 }

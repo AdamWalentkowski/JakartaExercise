@@ -6,6 +6,8 @@ import com.eti.pg.task.repository.TaskRepository;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -13,7 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@ApplicationScoped
+@Stateless
+@LocalBean
 @NoArgsConstructor
 public class TaskService {
     private TaskRepository taskRepository;
@@ -41,20 +44,17 @@ public class TaskService {
         return taskRepository.find(id);
     }
 
-    @Transactional
     public void createTask(Task task) {
         taskRepository.create(task);
         boardRepository.find(task.getBoard().getId()).ifPresent(board -> board.getTasks().add(task));
     }
 
-    @Transactional
     public void deleteTask(Long id) {
         Task task = taskRepository.find(id).orElseThrow();
         task.getBoard().getTasks().remove(task);
         taskRepository.delete(taskRepository.find(id).orElseThrow());
     }
 
-    @Transactional
     public void updateTask(Task task) {
         Task original = taskRepository.find(task.getId()).orElseThrow();
         taskRepository.detach(original);

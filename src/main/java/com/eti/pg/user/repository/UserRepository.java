@@ -4,13 +4,13 @@ import com.eti.pg.board.entity.Board;
 import com.eti.pg.repository.Repository;
 import com.eti.pg.user.entity.User;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@RequestScoped
+@Dependent
 public class UserRepository implements Repository<User, Long> {
     private EntityManager em;
 

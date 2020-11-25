@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -21,8 +22,18 @@ import java.util.List;
 @Named
 public class TaskEdit implements Serializable {
 
-    private final TaskService taskService;
-    private final BoardService boardService;
+    private TaskService taskService;
+    private BoardService boardService;
+
+    @EJB
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    @EJB
+    public void setBoardService(BoardService boardService) {
+        this.boardService = boardService;
+    }
 
     @Setter
     @Getter
@@ -32,12 +43,6 @@ public class TaskEdit implements Serializable {
     private TaskEditModel taskEditModel;
     @Getter
     private List<Board> availableBoards;
-
-    @Inject
-    public TaskEdit(TaskService taskService, BoardService boardService) {
-        this.taskService = taskService;
-        this.boardService = boardService;
-    }
 
     public void init() throws IOException {
         var task = taskService.findTaskById(id);

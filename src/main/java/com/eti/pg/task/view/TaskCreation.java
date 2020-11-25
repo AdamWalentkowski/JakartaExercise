@@ -6,9 +6,9 @@ import com.eti.pg.task.service.TaskService;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 
@@ -16,8 +16,18 @@ import java.io.Serializable;
 @Named
 public class TaskCreation implements Serializable {
 
-    private final TaskService taskService;
-    private final BoardService boardService;
+    private TaskService taskService;
+    private BoardService boardService;
+
+    @EJB
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    @EJB
+    public void setBoardService(BoardService boardService) {
+        this.boardService = boardService;
+    }
 
     @Setter
     @Getter
@@ -25,12 +35,6 @@ public class TaskCreation implements Serializable {
 
     @Getter
     private TaskCreationModel taskCreationModel;
-
-    @Inject
-    public TaskCreation(TaskService taskService, BoardService boardService) {
-        this.taskService = taskService;
-        this.boardService = boardService;
-    }
 
     public void init() {
         this.taskCreationModel = TaskCreationModel.builder()
