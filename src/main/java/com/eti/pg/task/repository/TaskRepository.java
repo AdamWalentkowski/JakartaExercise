@@ -41,8 +41,7 @@ public class TaskRepository implements Repository<Task, Long> {
 
     @Override
     public void update(Task entity) {
-        //TODO: next exercise
-        throw new UnsupportedOperationException("Operation not implemented.");
+        dataStore.updateTask(entity);
     }
 
     public List<Task> findByBoardId(Long id) {

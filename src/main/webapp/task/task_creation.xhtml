@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{taskCreation.boardId}" required="true"/>
+        <f:viewAction action="#{taskCreation.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="task" name="css/task_edit.css"/>
+        <article class="text--justified">
+            <header><h2>Create new task</h2></header>
+            <h:form class="task__form">
+                <h:outputLabel for="title" value="Title:"/>
+                <h:inputText class="ui-control ui-input" id="title" value="#{taskCreation.taskCreationModel.title}"/>
+                <h:outputLabel for="description" value="Description:"/>
+                <h:inputText class="ui-control ui-input" id="description" value="#{taskCreation.taskCreationModel.description}"/>
+                <h:outputLabel for="priority" value="Priority:"/>
+                <h:inputText class="ui-control" id="priority" value="#{taskCreation.taskCreationModel.priority}"/>
+                <h:commandButton class="ui-control ui-button" value="create"
+                                 action="#{taskCreation.createTaskAction()}"/>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

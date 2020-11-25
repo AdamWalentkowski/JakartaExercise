@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{taskOverview.id}" required="true"/>
+        <f:viewAction action="#{taskOverview.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article class="text--justified">
+            <header><h2>Task overview</h2></header>
+            <div class="task__grid">
+                <div class="task__title">
+                    Title: <h:outputText value="#{taskOverview.taskOverviewModel.title}"/>
+                </div>
+                <div class="task__description">
+                    Description: <h:outputText value="#{taskOverview.taskOverviewModel.description}"/>
+                </div>
+                <div class="task__priority">
+                    Priority: <h:outputText value="#{taskOverview.taskOverviewModel.priority}"/>
+                </div>
+                <div class="task__creation_date">
+                    Creation date: <h:outputText value="#{taskOverview.taskOverviewModel.creationDate}"/>
+                </div>
+                <div class="task__board_title">
+                    Board: <h:outputText value="#{taskOverview.taskOverviewModel.boardTitle}"/>
+                </div>
+            </div>
+        </article>
+    </ui:define>
+
+</ui:composition>

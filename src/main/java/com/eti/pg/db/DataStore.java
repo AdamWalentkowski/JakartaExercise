@@ -153,4 +153,16 @@ public class DataStore {
                             String.format("The task with id \"%d\" does not exist", id));
                 });
     }
+
+    public void updateTask(Task task) {
+        findTask(task.getId()).ifPresentOrElse(
+                original -> {
+                    tasks.remove(original);
+                    tasks.add(task);
+                },
+                () -> {
+                    throw new IllegalArgumentException(
+                            String.format("The task with id \"%d\" does not exist", task.getId()));
+                });
+    }
 }

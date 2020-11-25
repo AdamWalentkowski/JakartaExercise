@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -24,12 +25,19 @@ public class TaskService {
         return taskRepository.findByBoardId(id);
     }
 
+    public Optional<Task> findTaskById(Long id) {
+        return taskRepository.find(id);
+    }
+
     public void create(Task task) {
         taskRepository.create(task);
     }
 
     public void deleteTask(Long id) {
-        log.error("jestem w metodzie deleteTask");
         taskRepository.delete(taskRepository.find(id).orElseThrow());
+    }
+
+    public void update(Task task) {
+        taskRepository.update(task);
     }
 }

@@ -6,16 +6,17 @@ import com.eti.pg.task.service.TaskService;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serializable;
 
-@RequestScoped
+@ViewScoped
 @Named
-public class BoardOverview {
+public class BoardOverview implements Serializable {
     private final BoardService boardService;
     private final TaskService taskService;
     @Getter
@@ -44,10 +45,9 @@ public class BoardOverview {
         }
     }
 
-    public String deleteTaskAction(Long id) throws IOException {
+    public String deleteTaskAction(Long id) {
         taskService.deleteTask(id);
-//        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-//        FacesContext.getCurrentInstance().getExternalContext().redirect("board_overview?id=" + this.id);
-        return "board_list?faces-redirect=true";
+        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 }
