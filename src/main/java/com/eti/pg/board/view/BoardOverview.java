@@ -47,7 +47,7 @@ public class BoardOverview implements Serializable {
 
     public String deleteTaskAction(Long id) {
         taskService.deleteTask(id);
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        var viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 }

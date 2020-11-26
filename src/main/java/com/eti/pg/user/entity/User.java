@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @Table(name = "users")
 public class User implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String login;
     @Column(name = "first_name")

@@ -137,7 +137,7 @@ public class AvatarServlet extends HttpServlet {
         var user = userService.findUserById(id);
 
         if (user.isPresent()) {
-            Part avatar = request.getPart(Parameters.AVATAR);
+            var avatar = request.getPart(Parameters.AVATAR);
             if (avatar != null) {
                 userService.addAvatar(id, avatar.getInputStream());
                 return;

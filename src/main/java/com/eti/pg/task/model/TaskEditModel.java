@@ -27,12 +27,12 @@ public class TaskEditModel {
                 .build();
     }
 
-    public static BiFunction<TaskEditModel, Task, Task> modelToEntityUpdater() {
+    public static BiFunction<TaskEditModel, Task, Task> modelToEntityUpdater(Function<Board, Board> boardFunction) {
         return (request, taskToUpdate) -> {
             taskToUpdate.setTitle(request.getTitle());
             taskToUpdate.setDescription(request.getDescription());
             taskToUpdate.setPriority(request.getPriority());
-            taskToUpdate.setBoard(request.getBoard());
+            taskToUpdate.setBoard(boardFunction.apply(request.getBoard()));
             return taskToUpdate;
         };
     }

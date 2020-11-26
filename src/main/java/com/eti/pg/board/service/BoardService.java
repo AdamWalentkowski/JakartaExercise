@@ -46,4 +46,8 @@ public class BoardService {
     public void updateBoard(Board board) {
         boardRepository.update(board);
     }
+
+    public void flushData() {
+        boardRepository.flushData();
+    }
 }

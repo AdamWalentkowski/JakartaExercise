@@ -14,6 +14,7 @@ import javax.enterprise.context.Initialized;
 import javax.enterprise.context.control.RequestContextController;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -35,6 +36,7 @@ public class InitializedData {
         this.requestContextController = requestContextController;
     }
 
+    @Transactional
     public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
         init();
     }
@@ -93,6 +95,7 @@ public class InitializedData {
 
         initUsers.forEach(userService::createUser);
         initBoards.forEach(boardService::createBoard);
+        boardService.flushData();
 
         var initTasks = Arrays.asList(
                 Task.builder()
@@ -121,6 +124,18 @@ public class InitializedData {
                         .build()
         );
         initTasks.forEach(taskService::createTask);
+        boardService.flushData();
+
+
+        initBoards.forEach(x -> {
+            System.out.println("Board " + x.getTitle() + "tasks: ");
+            x.getTasks().forEach(y -> System.out.println(y.toString()));
+        });
+
+        initTasks.forEach(x -> {
+            System.out.println("Task " + x.getTitle() + "boards: ");
+            x.getBoard().getTasks().forEach(y -> System.out.println(y.toString()));
+        });
 
         requestContextController.deactivate();
     }

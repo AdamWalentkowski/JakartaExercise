@@ -72,4 +72,8 @@ public class TaskRepository implements Repository<Task, Long> {
             return Optional.empty();
         }
     }
+
+    public void flushData() {
+        em.flush();
+    }
 }
