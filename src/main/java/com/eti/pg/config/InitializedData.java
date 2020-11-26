@@ -1,7 +1,7 @@
 package com.eti.pg.config;
 
 import com.eti.pg.board.BoardScope;
-import com.eti.pg.board.Role;
+import com.eti.pg.user.Role;
 import com.eti.pg.board.entity.Board;
 import com.eti.pg.board.service.BoardService;
 import com.eti.pg.task.entity.Task;
@@ -10,40 +10,35 @@ import com.eti.pg.user.entity.User;
 import com.eti.pg.user.service.UserService;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
-import javax.enterprise.context.control.RequestContextController;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 @Singleton
 @Startup
 public class InitializedData {
-    private final UserService userService;
-    private final BoardService boardService;
-    private final TaskService taskService;
-
-    @Inject
-    public InitializedData(UserService userService,
-                           BoardService boardService,
-                           TaskService taskService,
-                           RequestContextController requestContextController) {
-        this.userService = userService;
-        this.boardService = boardService;
-        this.taskService = taskService;
-    }
+    private UserService userService;
+    private BoardService boardService;
+    private TaskService taskService;
 
     public InitializedData() {
     }
 
-    @Transactional
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
+    @EJB
+    public void setBoardService(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
+    @EJB
+    public void setTaskService(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    @EJB
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @PostConstruct
@@ -108,7 +103,7 @@ public class InitializedData {
                         .priority(5)
                         .creationDate(LocalDate.now())
                         .board(boardService.findBoardById(1L).orElseThrow())
-//                        .user(null)
+                        .user(userService.findUserById(1L).orElseThrow())
                         .build(),
                 Task.builder()
                         .title("Zrób tamto")
@@ -116,7 +111,7 @@ public class InitializedData {
                         .priority(3)
                         .creationDate(LocalDate.now())
                         .board(boardService.findBoardById(1L).orElseThrow())
-//                        .user(null)
+                        .user(userService.findUserById(2L).orElseThrow())
                         .build(),
                 Task.builder()
                         .title("Zrób jeszcze to")
@@ -124,7 +119,7 @@ public class InitializedData {
                         .priority(2)
                         .creationDate(LocalDate.now())
                         .board(boardService.findBoardById(2L).orElseThrow())
-//                        .user(null)
+                        .user(userService.findUserById(3L).orElseThrow())
                         .build()
         );
         initTasks.forEach(taskService::createTask);

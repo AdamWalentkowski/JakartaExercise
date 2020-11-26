@@ -1,14 +1,9 @@
 package com.eti.pg.user.dto;
 
-import com.eti.pg.board.BoardScope;
-import com.eti.pg.board.Role;
-import com.eti.pg.board.entity.Board;
+import com.eti.pg.user.Role;
 import com.eti.pg.user.entity.User;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDate;
 import java.util.function.Function;
 
@@ -17,6 +12,8 @@ import java.util.function.Function;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateUserRequest {
     private String login;
     private String firstName;

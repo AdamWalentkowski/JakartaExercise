@@ -1,6 +1,6 @@
 package com.eti.pg.user.entity;
 
-import com.eti.pg.board.Role;
+import com.eti.pg.user.Role;
 import lombok.*;
 
 import javax.persistence.*;

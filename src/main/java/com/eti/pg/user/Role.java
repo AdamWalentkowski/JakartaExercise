@@ -1,4 +1,4 @@
-package com.eti.pg.board;
+package com.eti.pg.user;
 
 public enum Role {
     DEVELOPER, MAINTAINER, ADMIN

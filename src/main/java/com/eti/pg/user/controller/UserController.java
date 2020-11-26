@@ -2,7 +2,6 @@ package com.eti.pg.user.controller;
 
 import com.eti.pg.board.controller.BoardController;
 import com.eti.pg.board.dto.CreateBoardRequest;
-import com.eti.pg.board.dto.GetBoardResponse;
 import com.eti.pg.user.dto.CreateUserRequest;
 import com.eti.pg.user.dto.GetUserResponse;
 import com.eti.pg.user.service.UserService;
@@ -35,14 +34,12 @@ public class UserController {
                 Response.status(Response.Status.NOT_FOUND).build();
     }
 
-    @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createBoard(CreateUserRequest createUserRequest) {
+    @POST
+    public Response createUser(CreateUserRequest createUserRequest) {
         var newUser = CreateUserRequest.dtoToEntityMapper().apply(createUserRequest);
         userService.createUser(newUser);
         return Response.created(UriBuilder.fromMethod(UserController.class, "getUser")
                 .build(newUser.getId())).build();
     }
-
-
 }

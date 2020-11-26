@@ -1,6 +1,6 @@
 package com.eti.pg.user.dto;
 
-import com.eti.pg.board.Role;
+import com.eti.pg.user.Role;
 import com.eti.pg.user.entity.User;
 import lombok.*;
 

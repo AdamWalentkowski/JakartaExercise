@@ -1,6 +1,7 @@
 package com.eti.pg.task.dto;
 
 import com.eti.pg.task.entity.Task;
+import com.eti.pg.user.dto.GetUserResponse;
 import lombok.*;
 
 import java.util.Collection;
@@ -28,6 +29,7 @@ public class GetTasksResponse {
                             .description(task.getDescription())
                             .priority(task.getPriority())
                             .creationDate(task.getCreationDate())
+                            .getUserResponse(GetUserResponse.entityToDtoMapper().apply(task.getUser()))
                             .build())
                     .forEach(response::task);
             return response.build();

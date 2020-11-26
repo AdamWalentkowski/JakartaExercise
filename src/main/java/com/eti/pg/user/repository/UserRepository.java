@@ -1,6 +1,5 @@
 package com.eti.pg.user.repository;
 
-import com.eti.pg.board.entity.Board;
 import com.eti.pg.repository.Repository;
 import com.eti.pg.user.entity.User;
 
@@ -35,7 +34,7 @@ public class UserRepository implements Repository<User, Long> {
 
     @Override
     public void delete(User entity) {
-        em.remove(em.find(Board.class, entity.getId()));
+        em.remove(em.find(User.class, entity.getId()));
     }
 
     @Override
