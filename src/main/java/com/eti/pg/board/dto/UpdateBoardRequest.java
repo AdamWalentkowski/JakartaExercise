@@ -11,6 +11,8 @@ import java.util.function.BiFunction;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateBoardRequest {
     private String title;
     private BoardScope boardScope;

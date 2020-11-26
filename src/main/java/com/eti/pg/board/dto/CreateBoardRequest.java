@@ -11,6 +11,8 @@ import java.util.function.Function;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequest {
     private String title;
     private BoardScope boardScope;
