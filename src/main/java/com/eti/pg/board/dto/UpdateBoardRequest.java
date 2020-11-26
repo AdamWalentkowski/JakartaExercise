@@ -11,15 +11,17 @@ import java.util.function.BiFunction;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateBoardRequest {
     private String title;
-    private BoardScope boardScope;
+    private String boardScope;
     private boolean isPrivate;
 
     public static BiFunction<UpdateBoardRequest, Board, Board> dtoToEntityUpdater() {
         return (request, boardToUpdate) -> {
             boardToUpdate.setTitle(request.getTitle());
-            boardToUpdate.setBoardScope(request.getBoardScope());
+            boardToUpdate.setBoardScope(BoardScope.valueOf(request.getBoardScope()));
             boardToUpdate.setPrivate(request.isPrivate());
             return boardToUpdate;
         };

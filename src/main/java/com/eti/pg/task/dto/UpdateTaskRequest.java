@@ -10,6 +10,8 @@ import java.util.function.BiFunction;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateTaskRequest {
     private String title;
     private String description;

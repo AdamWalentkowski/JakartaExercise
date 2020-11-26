@@ -11,15 +11,17 @@ import java.util.function.Function;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateBoardRequest {
     private String title;
-    private BoardScope boardScope;
+    private String boardScope;
     private boolean isPrivate;
 
     public static Function<CreateBoardRequest, Board> dtoToEntityMapper() {
         return request -> Board.builder()
                 .title(request.getTitle())
-                .boardScope(request.getBoardScope())
+                .boardScope(BoardScope.valueOf(request.getBoardScope()))
                 .isPrivate(request.isPrivate())
                 .build();
     }

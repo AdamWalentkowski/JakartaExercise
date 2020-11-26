@@ -16,6 +16,8 @@ import java.util.function.Function;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GetBoardsResponse {
     @Singular
     private List<GetBoardResponse> boards;
