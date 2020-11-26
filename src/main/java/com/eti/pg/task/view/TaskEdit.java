@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -55,9 +56,14 @@ public class TaskEdit implements Serializable {
         }
     }
 
+    @Transactional
     public String saveChangesAction() {
-        taskService.updateTask(TaskEditModel.modelToEntityUpdater().apply(taskEditModel, taskService.findTaskById(id).orElseThrow()));
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        var taskToUpdate = taskService.findTaskById(id).orElseThrow();
+        var updaterResult = TaskEditModel
+                .modelToEntityUpdater(board -> boardService.findBoardById(board.getId()).orElse(null))
+                .apply(taskEditModel, taskToUpdate);
+        taskService.updateTask(updaterResult);
+        var viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 

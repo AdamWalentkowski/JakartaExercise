@@ -59,4 +59,8 @@ public class BoardRepository implements Repository<Board, Long> {
             return Optional.empty();
         }
     }
+
+    public void flushData() {
+        em.flush();
+    }
 }

@@ -3,26 +3,47 @@ package com.eti.pg.config;
 import com.eti.pg.board.BoardScope;
 import com.eti.pg.board.Role;
 import com.eti.pg.board.entity.Board;
+import com.eti.pg.board.service.BoardService;
 import com.eti.pg.task.entity.Task;
+import com.eti.pg.task.service.TaskService;
 import com.eti.pg.user.entity.User;
+import com.eti.pg.user.service.UserService;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.*;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.context.control.RequestContextController;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 @Singleton
 @Startup
 public class InitializedData {
-    private EntityManager em;
+    private final UserService userService;
+    private final BoardService boardService;
+    private final TaskService taskService;
 
-    @PersistenceContext
-    public void setEm(EntityManager em) {
-        this.em = em;
+    @Inject
+    public InitializedData(UserService userService,
+                           BoardService boardService,
+                           TaskService taskService,
+                           RequestContextController requestContextController) {
+        this.userService = userService;
+        this.boardService = boardService;
+        this.taskService = taskService;
     }
+
     public InitializedData() {
+    }
+
+    @Transactional
+    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
+        init();
     }
 
     @PostConstruct
@@ -57,7 +78,6 @@ public class InitializedData {
                     .role(Role.DEVELOPER)
                     .build()
         );
-        initUsers.forEach(em::persist);
 
         var initBoards = Arrays.asList(
             Board.builder()
@@ -76,7 +96,10 @@ public class InitializedData {
                     .isPrivate(false)
                     .build()
         );
-        initBoards.forEach(em::persist);
+
+        initUsers.forEach(userService::createUser);
+        initBoards.forEach(boardService::createBoard);
+        boardService.flushData();
 
         var initTasks = Arrays.asList(
                 Task.builder()
@@ -84,26 +107,38 @@ public class InitializedData {
                         .description("coś tam coś tam")
                         .priority(5)
                         .creationDate(LocalDate.now())
-                        .board(initBoards.get(0))
-                        .user(initUsers.get(0))
+                        .board(boardService.findBoardById(1L).orElseThrow())
+//                        .user(null)
                         .build(),
                 Task.builder()
                         .title("Zrób tamto")
                         .description("bla bla bla")
                         .priority(3)
                         .creationDate(LocalDate.now())
-                        .board(initBoards.get(0))
-                        .user(initUsers.get(1))
+                        .board(boardService.findBoardById(1L).orElseThrow())
+//                        .user(null)
                         .build(),
                 Task.builder()
                         .title("Zrób jeszcze to")
                         .description("xyz xyz")
                         .priority(2)
                         .creationDate(LocalDate.now())
-                        .board(initBoards.get(1))
-                        .user(initUsers.get(2))
+                        .board(boardService.findBoardById(2L).orElseThrow())
+//                        .user(null)
                         .build()
         );
-        initTasks.forEach(em::persist);
+        initTasks.forEach(taskService::createTask);
+        boardService.flushData();
+
+
+        initBoards.forEach(x -> {
+            System.out.println("Board " + x.getTitle() + "tasks: ");
+            x.getTasks().forEach(y -> System.out.println(y.toString()));
+        });
+
+        initTasks.forEach(x -> {
+            System.out.println("Task " + x.getTitle() + "boards: ");
+            x.getBoard().getTasks().forEach(y -> System.out.println(y.toString()));
+        });
     }
 }

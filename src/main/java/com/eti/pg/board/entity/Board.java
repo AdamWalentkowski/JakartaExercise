@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name="boards")
 public class Board implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     @Column(name = "board_scope")
@@ -26,6 +27,8 @@ public class Board implements Serializable {
     private BoardScope boardScope;
     @Column(name = "is_private")
     private boolean isPrivate;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> tasks;
 }

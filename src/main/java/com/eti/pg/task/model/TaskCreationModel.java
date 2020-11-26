@@ -13,7 +13,6 @@ import java.util.function.Function;
 @ToString
 @EqualsAndHashCode
 public class TaskCreationModel {
-    private Long id;
     private String title;
     private String description;
     private Integer priority;

@@ -12,6 +12,8 @@ import java.util.function.Function;
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GetTasksResponse {
     @Singular
     private List<GetTaskResponse> tasks;

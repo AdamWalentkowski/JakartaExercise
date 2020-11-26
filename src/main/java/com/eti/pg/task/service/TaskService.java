@@ -50,18 +50,23 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
-        Task task = taskRepository.find(id).orElseThrow();
+        var task = taskRepository.find(id).orElseThrow();
+        System.out.println("taskDelete: " + task.toString());
         task.getBoard().getTasks().remove(task);
         taskRepository.delete(taskRepository.find(id).orElseThrow());
     }
 
     public void updateTask(Task task) {
-        Task original = taskRepository.find(task.getId()).orElseThrow();
+        var original = taskRepository.find(task.getId()).orElseThrow();
         taskRepository.detach(original);
         if (!original.getBoard().getId().equals(task.getBoard().getId())) {
-            original.getBoard().getTasks().removeIf(t -> t.getId().equals(task.getId()));
+            boardRepository.find(original.getBoard().getId()).ifPresent(b -> b.getTasks().removeIf(t -> t.getId().equals(task.getId())));
             boardRepository.find(task.getBoard().getId()).ifPresent(b -> b.getTasks().add(task));
         }
         taskRepository.update(task);
+    }
+
+    public void flushData() {
+        taskRepository.flushData();
     }
 }

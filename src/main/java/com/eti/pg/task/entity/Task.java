@@ -19,6 +19,7 @@ import java.time.LocalDate;
 @Table(name = "tasks")
 public class Task implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
