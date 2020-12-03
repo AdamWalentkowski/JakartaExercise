@@ -56,6 +56,13 @@ public class TaskRepository implements Repository<Task, Long> {
                 .getResultList();
     }
 
+    public List<Task> findByBoardIdAndUser(Long id, User user) {
+        return em.createQuery("select t from Task t where t.board.id = :id and t.user = :user", Task.class)
+                .setParameter("id", id)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
     public List<Task> findByBoardName(String boardName) {
         return em.createQuery("select t from Task t where t.board.title = :boardName", Task.class)
                 .setParameter("boardName", boardName)

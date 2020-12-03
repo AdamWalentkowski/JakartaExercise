@@ -11,50 +11,52 @@
     </f:metadata>
 
     <ui:define name="content">
-        <article class="text--justified">
-            <header><h2>Board overview</h2></header>
-            <div class="board__grid">
-                <div class="board__title">
-                    Title: <h:outputText value="#{boardOverview.boardOverviewModel.boardDetails.title}"/>
+        <h:panelGroup rendered="#{facesContext.externalContext.userPrincipal != null}" layout="block">
+            <article class="text--justified">
+                <header><h2>Board overview</h2></header>
+                <div class="board__grid">
+                    <div class="board__title">
+                        Title: <h:outputText value="#{boardOverview.boardOverviewModel.boardDetails.title}"/>
+                    </div>
+                    <div class="board__scope">
+                        Visibility: <h:outputText value="#{boardOverview.boardOverviewModel.boardDetails.boardScopeName}"/>
+                    </div>
+                    <div class="board__is_private">
+                        Private?: <h:outputText value="#{boardOverview.boardOverviewModel.boardDetails.isPrivateAnswer}"/>
+                    </div>
+                    <div class="board__create_task">
+                        <h:link outcome="/task/task_creation.xhtml" value="create">
+                        <f:param name="id" value="#{boardOverview.id}"/>
+                        </h:link>
+                    </div>
                 </div>
-                <div class="board__scope">
-                    Visibility: <h:outputText value="#{boardOverview.boardOverviewModel.boardDetails.boardScopeName}"/>
-                </div>
-                <div class="board__is_private">
-                    Private?: <h:outputText value="#{boardOverview.boardOverviewModel.boardDetails.isPrivateAnswer}"/>
-                </div>
-                <div class="board__create_task">
-                    <h:link outcome="/task/task_creation.xhtml" value="create">
-                    <f:param name="id" value="#{boardOverview.id}"/>
-                    </h:link>
-                </div>
-            </div>
-            <h:dataTable value="#{boardOverview.boardOverviewModel.tasks}" var="task" styleClass="data-table">
-                <h:column>
-                    <f:facet name="header">Task title</f:facet>
-                    <h:outputText value="#{task.title}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Task details</f:facet>
-                    <h:link outcome="/task/task_overview.xhtml" value="view">
-                        <f:param name="id" value="#{task.id}"/>
-                    </h:link>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Remove this task</f:facet>
-                    <h:form>
-                        <h:commandButton styleClass="ui-button ui-control" value="remove"
-                                         action="#{boardOverview.deleteTaskAction(task.id)}"/>
-                    </h:form>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Edit this task</f:facet>
-                    <h:link outcome="/task/task_edit.xhtml" value="edit">
-                        <f:param name="id" value="#{task.id}"/>
-                    </h:link>
-                </h:column>
-            </h:dataTable>
-        </article>
+                <h:dataTable value="#{boardOverview.boardOverviewModel.tasks}" var="task" styleClass="data-table">
+                    <h:column>
+                        <f:facet name="header">Task title</f:facet>
+                        <h:outputText value="#{task.title}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Task details</f:facet>
+                        <h:link outcome="/task/task_overview.xhtml" value="view">
+                            <f:param name="id" value="#{task.id}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Remove this task</f:facet>
+                        <h:form>
+                            <h:commandButton styleClass="ui-button ui-control" value="remove"
+                                             action="#{boardOverview.deleteTaskAction(task.id)}"/>
+                        </h:form>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Edit this task</f:facet>
+                        <h:link outcome="/task/task_edit.xhtml" value="edit">
+                            <f:param name="id" value="#{task.id}"/>
+                        </h:link>
+                    </h:column>
+                </h:dataTable>
+            </article>
+        </h:panelGroup>
     </ui:define>
 
 </ui:composition>

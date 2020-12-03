@@ -6,6 +6,7 @@
                 template="/WEB-INF/template/main.xhtml">
 
     <ui:define name="content">
+        <h:panelGroup rendered="#{facesContext.externalContext.userPrincipal != null}" layout="block">
             <article class="text--justified">
                 <header><h2>Boards</h2></header>
                 <h:dataTable value="#{boardList.boardList.boards}" var="board" styleClass="data-table">
@@ -28,6 +29,7 @@
                     </h:column>
                 </h:dataTable>
             </article>
+        </h:panelGroup>
     </ui:define>
 
 </ui:composition>

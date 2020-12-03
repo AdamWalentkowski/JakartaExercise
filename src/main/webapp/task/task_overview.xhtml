@@ -11,26 +11,28 @@
     </f:metadata>
 
     <ui:define name="content">
-        <article class="text--justified">
-            <header><h2>Task overview</h2></header>
-            <div class="task__grid">
-                <div class="task__title">
-                    Title: <h:outputText value="#{taskOverview.taskOverviewModel.title}"/>
+        <h:panelGroup rendered="#{facesContext.externalContext.userPrincipal != null}" layout="block">
+            <article class="text--justified">
+                <header><h2>Task overview</h2></header>
+                <div class="task__grid">
+                    <div class="task__title">
+                        Title: <h:outputText value="#{taskOverview.taskOverviewModel.title}"/>
+                    </div>
+                    <div class="task__description">
+                        Description: <h:outputText value="#{taskOverview.taskOverviewModel.description}"/>
+                    </div>
+                    <div class="task__priority">
+                        Priority: <h:outputText value="#{taskOverview.taskOverviewModel.priority}"/>
+                    </div>
+                    <div class="task__creation_date">
+                        Creation date: <h:outputText value="#{taskOverview.taskOverviewModel.creationDate}"/>
+                    </div>
+                    <div class="task__board_title">
+                        Board: <h:outputText value="#{taskOverview.taskOverviewModel.boardTitle}"/>
+                    </div>
                 </div>
-                <div class="task__description">
-                    Description: <h:outputText value="#{taskOverview.taskOverviewModel.description}"/>
-                </div>
-                <div class="task__priority">
-                    Priority: <h:outputText value="#{taskOverview.taskOverviewModel.priority}"/>
-                </div>
-                <div class="task__creation_date">
-                    Creation date: <h:outputText value="#{taskOverview.taskOverviewModel.creationDate}"/>
-                </div>
-                <div class="task__board_title">
-                    Board: <h:outputText value="#{taskOverview.taskOverviewModel.boardTitle}"/>
-                </div>
-            </div>
-        </article>
+            </article>
+        </h:panelGroup>
     </ui:define>
 
 </ui:composition>

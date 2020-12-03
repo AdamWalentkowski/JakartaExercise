@@ -11,20 +11,21 @@
     </f:metadata>
 
     <ui:define name="content">
+        <h:panelGroup rendered="#{facesContext.externalContext.userPrincipal != null}" layout="block">
         <h:outputStylesheet library="task" name="css/task_edit.css"/>
-        <article class="text--justified">
-            <header><h2>Create new task</h2></header>
-            <h:form class="task__form">
-                <h:outputLabel for="title" value="Title:"/>
-                <h:inputText class="ui-control ui-input" id="title" value="#{taskCreation.taskCreationModel.title}"/>
-                <h:outputLabel for="description" value="Description:"/>
-                <h:inputText class="ui-control ui-input" id="description" value="#{taskCreation.taskCreationModel.description}"/>
-                <h:outputLabel for="priority" value="Priority:"/>
-                <h:inputText class="ui-control" id="priority" value="#{taskCreation.taskCreationModel.priority}"/>
-                <h:commandButton class="ui-control ui-button" value="create"
-                                 action="#{taskCreation.createTaskAction()}"/>
-            </h:form>
-        </article>
+            <article class="text--justified">
+                <header><h2>Create new task</h2></header>
+                <h:form class="task__form">
+                    <h:outputLabel for="title" value="Title:"/>
+                    <h:inputText class="ui-control ui-input" id="title" value="#{taskCreation.taskCreationModel.title}"/>
+                    <h:outputLabel for="description" value="Description:"/>
+                    <h:inputText class="ui-control ui-input" id="description" value="#{taskCreation.taskCreationModel.description}"/>
+                    <h:outputLabel for="priority" value="Priority:"/>
+                    <h:inputText class="ui-control" id="priority" value="#{taskCreation.taskCreationModel.priority}"/>
+                    <h:commandButton class="ui-control ui-button" value="create"
+                                     action="#{taskCreation.createTaskAction()}"/>
+                </h:form>
+            </article>
+        </h:panelGroup>
     </ui:define>
-
 </ui:composition>

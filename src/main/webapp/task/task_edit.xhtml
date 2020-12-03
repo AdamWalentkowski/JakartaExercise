@@ -11,7 +11,8 @@
     </f:metadata>
 
     <ui:define name="content">
-        <h:outputStylesheet library="task" name="css/task_edit.css"/><!-- Automatically relocated to head. -->
+        <h:panelGroup rendered="#{facesContext.externalContext.userPrincipal != null}" layout="block">
+            <h:outputStylesheet library="task" name="css/task_edit.css"/><!-- Automatically relocated to head. -->
             <article class="text--justified">
                 <header><h2>Edit task info</h2></header>
                 <h:form class="task__form">
@@ -31,6 +32,6 @@
                                      action="#{taskEdit.saveChangesAction()}"/>
                 </h:form>
             </article>
+        </h:panelGroup>
     </ui:define>
-
 </ui:composition>
