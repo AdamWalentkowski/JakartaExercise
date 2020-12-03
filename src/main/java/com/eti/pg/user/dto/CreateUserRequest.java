@@ -16,6 +16,7 @@ import java.util.function.Function;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateUserRequest {
     private String login;
+    private String password;
     private String firstName;
     private String lastName;
     private LocalDate employmentDate;
@@ -25,6 +26,7 @@ public class CreateUserRequest {
     public static Function<CreateUserRequest, User> dtoToEntityMapper() {
         return request -> User.builder()
                 .login(request.getLogin())
+                .password(request.getPassword())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .employmentDate(request.getEmploymentDate())

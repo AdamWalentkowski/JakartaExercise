@@ -17,8 +17,9 @@ import java.time.LocalDate;
 @Table(name = "users")
 public class User implements Serializable {
     @Id
+    @Column(name = "login")
     private String login;
-    @ToString.Exclude
+    @Column(name = "password")
     private String password;
     @Column(name = "first_name")
     private String firstName;
@@ -26,6 +27,7 @@ public class User implements Serializable {
     private String lastName;
     @Column(name = "employment_date")
     private LocalDate employmentDate;
+    @Column(name = "role")
     private String role;
     @Column(name = "avatar_path")
     private String avatarPath;

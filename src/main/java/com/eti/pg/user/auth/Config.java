@@ -9,8 +9,8 @@ import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 @BasicAuthenticationMechanismDefinition(realmName = "Jakarta Exercise")
 @DatabaseIdentityStoreDefinition(
         dataSourceLookup = "jdbc/JakartaExerciseBoards",
-        callerQuery = "select password from users where login = ?",
-        groupsQuery = "select role from users where login = ?",
+        callerQuery =  "#{'select password from users where login = ?'}",
+        groupsQuery = "#{'select role from users where login = ?'}",
         hashAlgorithm = Pbkdf2PasswordHash.class,
         hashAlgorithmParameters = {
                 "Pbkdf2PasswordHash.Algorithm=PBKDF2WithHmacSHA256",
