@@ -50,7 +50,11 @@ public class TaskService {
     }
 
     public Optional<Task> findTaskByIdAndBoardName(Long id, String boardName) {
-        return taskRepository.findByIdAndBoardName(id, boardName);
+        if (securityContext.isCallerInRole(UserRole.ADMIN)) {
+            return taskRepository.findByIdAndBoardName(id, boardName);
+        }
+        var user = userRepository.find(securityContext.getCallerPrincipal().getName()).orElseThrow();
+        return taskRepository.findByIdAndBoardNameAndUser(id, boardName, user);
     }
 
     public Optional<Task> findTaskById(Long id) {
