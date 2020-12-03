@@ -50,6 +50,18 @@ public class TaskRepository implements Repository<Task, Long> {
         em.detach(entity);
     }
 
+    public Optional<Task> findByUser(Long id, User user) {
+         try {
+             return Optional.ofNullable(em.createQuery("select t from Task t where t.id = :id and t.user = :user", Task.class)
+                     .setParameter("id", id)
+                     .setParameter("user", user)
+                     .getSingleResult());
+        } catch (NoResultException ex) {
+             return Optional.empty();
+         }
+
+    }
+
     public List<Task> findByBoardId(Long id) {
         return em.createQuery("select t from Task t where t.board.id = :id", Task.class)
                 .setParameter("id", id)

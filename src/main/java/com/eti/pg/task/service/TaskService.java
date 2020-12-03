@@ -63,7 +63,11 @@ public class TaskService {
     }
 
     public Optional<Task> findTaskById(Long id) {
-        return taskRepository.find(id);
+        if (securityContext.isCallerInRole(UserRole.ADMIN)) {
+            return taskRepository.find(id);
+        }
+        var user = userRepository.find(securityContext.getCallerPrincipal().getName()).orElseThrow();
+        return taskRepository.findByUser(id, user);
     }
 
     public void createTask(Task task) {

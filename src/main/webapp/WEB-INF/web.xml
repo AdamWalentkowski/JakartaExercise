@@ -36,6 +36,10 @@
             <web-resource-name>board</web-resource-name>
             <url-pattern>/board/*</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>task</web-resource-name>
+            <url-pattern>/task/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <role-name>developer</role-name>
             <role-name>admin</role-name>
