@@ -1,6 +1,6 @@
 package com.eti.pg.user.dto;
 
-import com.eti.pg.user.Role;
+import com.eti.pg.user.entity.UserRole;
 import com.eti.pg.user.entity.User;
 import lombok.*;
 
@@ -19,7 +19,7 @@ public class CreateUserRequest {
     private String firstName;
     private String lastName;
     private LocalDate employmentDate;
-    private Role role;
+    private String role;
     private String avatarPath;
 
     public static Function<CreateUserRequest, User> dtoToEntityMapper() {
@@ -27,8 +27,8 @@ public class CreateUserRequest {
                 .login(request.getLogin())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .employmentDate(request.employmentDate)
-                .role(request.role)
+                .employmentDate(request.getEmploymentDate())
+                .role(request.getRole())
                 .avatarPath(request.getAvatarPath())
                 .build();
     }

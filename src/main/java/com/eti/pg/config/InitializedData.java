@@ -1,7 +1,7 @@
 package com.eti.pg.config;
 
 import com.eti.pg.board.BoardScope;
-import com.eti.pg.user.Role;
+import com.eti.pg.user.entity.UserRole;
 import com.eti.pg.board.entity.Board;
 import com.eti.pg.board.service.BoardService;
 import com.eti.pg.task.entity.Task;
@@ -10,69 +10,74 @@ import com.eti.pg.user.entity.User;
 import com.eti.pg.user.service.UserService;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 @Singleton
 @Startup
 public class InitializedData {
-    private UserService userService;
-    private BoardService boardService;
-    private TaskService taskService;
+    private EntityManager em;
+    private Pbkdf2PasswordHash pbkdf;
+
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
+    @Inject
+    public InitializedData(Pbkdf2PasswordHash pbkdf) {
+        this.pbkdf = pbkdf;
+    }
 
     public InitializedData() {
-    }
-
-    @EJB
-    public void setBoardService(BoardService boardService) {
-        this.boardService = boardService;
-    }
-
-    @EJB
-    public void setTaskService(TaskService taskService) {
-        this.taskService = taskService;
-    }
-
-    @EJB
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 
     @PostConstruct
     private synchronized void init() {
         var initUsers = Arrays.asList(
             User.builder()
-                    .login("lordofon1X1")
+                    .login("admin")
+                    .password(pbkdf.generate("admin".toCharArray()))
                     .firstName("Marek")
                     .lastName("Niewazne")
                     .employmentDate(LocalDate.now().minusYears(5))
-                    .role(Role.ADMIN)
+                    .role(UserRole.ADMIN)
                     .build(),
             User.builder()
-                    .login("siaBaDaBa")
+                    .login("maintainer")
+                    .password(pbkdf.generate("maintainer".toCharArray()))
                     .firstName("Kornel")
                     .lastName("Krzywiec")
                     .employmentDate(LocalDate.now().minusYears(3))
-                    .role(Role.MAINTAINER)
+                    .role(UserRole.MAINTAINER)
                     .build(),
             User.builder()
-                    .login("toto_Africa")
+                    .login("dev1")
+                    .password(pbkdf.generate("dev1".toCharArray()))
                     .firstName("Maciek")
                     .lastName("Keicam")
                     .employmentDate(LocalDate.now().minusYears(1))
-                    .role(Role.DEVELOPER)
+                    .role(UserRole.DEVELOPER)
                     .build(),
             User.builder()
-                    .login("bartek3212_stazysta")
+                    .login("dev2")
+                    .password(pbkdf.generate("dev2".toCharArray()))
                     .firstName("Bartek")
                     .lastName("Nudny")
                     .employmentDate(LocalDate.now().minusYears(1))
-                    .role(Role.DEVELOPER)
+                    .role(UserRole.DEVELOPER)
                     .build()
         );
+
+        initUsers.forEach(em::persist);
 
         var initBoards = Arrays.asList(
             Board.builder()
@@ -92,39 +97,45 @@ public class InitializedData {
                     .build()
         );
 
-        initUsers.forEach(userService::createUser);
-        initBoards.forEach(boardService::createBoard);
-        boardService.flushData();
+        initBoards.forEach(em::persist);
 
         var initTasks = Arrays.asList(
                 Task.builder()
-                        .title("Zrób to")
+                        .title("Zrób zad1")
                         .description("coś tam coś tam")
                         .priority(5)
                         .creationDate(LocalDate.now())
-                        .board(boardService.findBoardById(1L).orElseThrow())
-                        .user(userService.findUserById(1L).orElseThrow())
+                        .board(initBoards.get(0))
+                        .user(initUsers.get(0))
                         .build(),
                 Task.builder()
-                        .title("Zrób tamto")
+                        .title("Zrób zad2")
                         .description("bla bla bla")
                         .priority(3)
                         .creationDate(LocalDate.now())
-                        .board(boardService.findBoardById(1L).orElseThrow())
-                        .user(userService.findUserById(2L).orElseThrow())
+                        .board(initBoards.get(0))
+                        .user(initUsers.get(1))
                         .build(),
                 Task.builder()
-                        .title("Zrób jeszcze to")
+                        .title("Zrób zad3")
                         .description("xyz xyz")
                         .priority(2)
                         .creationDate(LocalDate.now())
-                        .board(boardService.findBoardById(2L).orElseThrow())
-                        .user(userService.findUserById(3L).orElseThrow())
+                        .board(initBoards.get(1))
+                        .user(initUsers.get(2))
+                        .build(),
+                Task.builder()
+                        .title("Zrób zad4")
+                        .description("fafafafafa")
+                        .priority(20)
+                        .creationDate(LocalDate.now())
+                        .board(initBoards.get(2))
+                        .user(initUsers.get(3))
                         .build()
         );
-        initTasks.forEach(taskService::createTask);
-        boardService.flushData();
+        initTasks.forEach(em::persist);
 
+        initUsers.forEach(x -> System.out.println("User " + x.getLogin()));
 
         initBoards.forEach(x -> {
             System.out.println("Board " + x.getTitle() + "tasks: ");

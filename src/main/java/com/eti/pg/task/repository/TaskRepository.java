@@ -2,6 +2,7 @@ package com.eti.pg.task.repository;
 
 import com.eti.pg.repository.Repository;
 import com.eti.pg.task.entity.Task;
+import com.eti.pg.user.entity.User;
 
 import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
@@ -61,12 +62,32 @@ public class TaskRepository implements Repository<Task, Long> {
                 .getResultList();
     }
 
+    public List<Task> findByBoardNameAndUser(String boardName, User user) {
+        return em.createQuery("select t from Task t where t.board.title = :boardName and t.user = :user", Task.class)
+                .setParameter("boardName", boardName)
+                .setParameter("user", user)
+                .getResultList();    }
+
     public Optional<Task> findByIdAndBoardName(Long id, String boardName) {
         try {
             return Optional.ofNullable(
                     em.createQuery("select t from Task t where t.id = :id and t.board.title = :boardName", Task.class)
                             .setParameter("id", id)
                             .setParameter("boardName", boardName)
+                            .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Task> findByIdAndBoardNameAndUser(Long id, String boardName, User user) {
+        try {
+            return Optional.ofNullable(
+                    em.createQuery("select t from Task t where t.id = :id " +
+                            "and t.board.title = :boardName and t.user = :user", Task.class)
+                            .setParameter("id", id)
+                            .setParameter("boardName", boardName)
+                            .setParameter("user", user)
                             .getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();

@@ -7,15 +7,19 @@ import com.eti.pg.task.dto.GetTaskResponse;
 import com.eti.pg.task.dto.GetTasksResponse;
 import com.eti.pg.task.dto.UpdateTaskRequest;
 import com.eti.pg.task.service.TaskService;
+import com.eti.pg.user.entity.UserRole;
 
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
+import javax.ejb.EJBAccessException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 @Path("/boards/{boardName}/tasks")
+@RolesAllowed({UserRole.ADMIN, UserRole.MAINTAINER, UserRole.DEVELOPER})
 public class TaskController {
 
     private BoardService boardService;
@@ -70,7 +74,11 @@ public class TaskController {
     public Response updateTask(@PathParam("boardName") String boardName, @PathParam("id") Long id, UpdateTaskRequest updateTaskRequest) {
         var taskToUpdate = taskService.findTaskById(id);
         if(taskToUpdate.isPresent()) {
-            taskService.updateTask(UpdateTaskRequest.dtoToEntityUpdater().apply(updateTaskRequest, taskToUpdate.get()));
+            try {
+                taskService.updateTask(UpdateTaskRequest.dtoToEntityUpdater().apply(updateTaskRequest, taskToUpdate.get()));
+            } catch (EJBAccessException ex) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
@@ -83,7 +91,11 @@ public class TaskController {
         var taskToDelete = taskService.findTaskById(id);
         if (taskToDelete.isPresent()) {
             var deletedTask = GetTaskResponse.entityToDtoMapper().apply(CloningUtility.clone(taskToDelete.get()));
-            taskService.deleteTask(id);
+            try {
+                taskService.deleteTask(id);
+            } catch (EJBAccessException ex) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
             return Response.ok(deletedTask).build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

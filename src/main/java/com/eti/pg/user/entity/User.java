@@ -1,6 +1,5 @@
 package com.eti.pg.user.entity;
 
-import com.eti.pg.user.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,17 +17,16 @@ import java.time.LocalDate;
 @Table(name = "users")
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String login;
+    @ToString.Exclude
+    private String password;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "employment_date")
     private LocalDate employmentDate;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
     @Column(name = "avatar_path")
     private String avatarPath;
 }

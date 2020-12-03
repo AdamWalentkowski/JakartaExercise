@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Dependent
-public class UserRepository implements Repository<User, Long> {
+public class UserRepository implements Repository<User, String> {
     private EntityManager em;
 
     @PersistenceContext
@@ -18,8 +18,8 @@ public class UserRepository implements Repository<User, Long> {
         this.em = em;
     }
 
-    public Optional<User> find(Long id) {
-        return Optional.ofNullable(em.find(User.class, id));
+    public Optional<User> find(String login) {
+        return Optional.ofNullable(em.find(User.class, login));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class UserRepository implements Repository<User, Long> {
 
     @Override
     public void delete(User entity) {
-        em.remove(em.find(User.class, entity.getId()));
+        em.remove(em.find(User.class, entity.getLogin()));
     }
 
     @Override

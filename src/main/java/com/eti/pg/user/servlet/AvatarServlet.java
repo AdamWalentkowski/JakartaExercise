@@ -1,12 +1,10 @@
 package com.eti.pg.user.servlet;
 
-import com.eti.pg.user.entity.User;
 import com.eti.pg.user.service.UserService;
 import com.eti.pg.utils.ServletUtility;
 import org.apache.commons.io.FileUtils;
 
 import javax.ejb.EJB;
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +15,6 @@ import javax.servlet.http.Part;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet(urlPatterns = {
         AvatarServlet.Paths.AVATARS + "/*"
@@ -98,8 +95,8 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void getAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        var user = userService.findUserById(id);
+        var login = ServletUtility.parseRequestPath(request).replaceAll("/", "");
+        var user = userService.findUserByLogin(login);
 
         if (user.isPresent()) {
             if (user.get().getAvatarPath() != null) {
@@ -115,13 +112,13 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void postAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        var user = userService.findUserById(id);
+        var login = ServletUtility.parseRequestPath(request).replaceAll("/", "");
+        var user = userService.findUserByLogin(login);
         if (user.isPresent()) {
             if (user.get().getAvatarPath() == null) {
-                Part avatar = request.getPart(Parameters.AVATAR);
+                var avatar = request.getPart(Parameters.AVATAR);
                 if (avatar != null) {
-                    userService.addAvatar(id, avatar.getInputStream());
+                    userService.addAvatar(login, avatar.getInputStream());
                     return;
                 }
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -134,13 +131,13 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void putAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        var user = userService.findUserById(id);
+        var login = ServletUtility.parseRequestPath(request).replaceAll("/", "");
+        var user = userService.findUserByLogin(login);
 
         if (user.isPresent()) {
             var avatar = request.getPart(Parameters.AVATAR);
             if (avatar != null) {
-                userService.addAvatar(id, avatar.getInputStream());
+                userService.addAvatar(login, avatar.getInputStream());
                 return;
             }
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -150,12 +147,12 @@ public class AvatarServlet extends HttpServlet {
     }
 
     private void deleteAvatar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var id = Long.parseLong(ServletUtility.parseRequestPath(request).replaceAll("/", ""));
-        var user = userService.findUserById(id);
+        var login = ServletUtility.parseRequestPath(request).replaceAll("/", "");
+        var user = userService.findUserByLogin(login);
 
         if (user.isPresent()) {
             if (user.get().getAvatarPath() != null) {
-                userService.deleteAvatar(id);
+                userService.deleteAvatar(login);
                 return;
             }
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);

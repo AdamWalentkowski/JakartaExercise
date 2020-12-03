@@ -1,6 +1,6 @@
 package com.eti.pg.user.dto;
 
-import com.eti.pg.user.Role;
+import com.eti.pg.user.entity.UserRole;
 import com.eti.pg.user.entity.User;
 import lombok.*;
 
@@ -15,16 +15,14 @@ import java.util.function.Function;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GetUserResponse {
-    private Long id;
     private String login;
     private String firstName;
     private String lastName;
     private LocalDate employmentDate;
-    private Role role;
+    private String role;
 
     public static Function<User, GetUserResponse> entityToDtoMapper() {
         return user -> GetUserResponse.builder()
-                .id(user.getId())
                 .login(user.getLogin())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

@@ -23,7 +23,6 @@ public class GetUsersResponse {
             var response = GetUsersResponse.builder();
             users.stream()
                     .map(user -> GetUserResponse.builder()
-                            .id(user.getId())
                             .login(user.getLogin())
                             .firstName(user.getFirstName())
                             .lastName(user.getLastName())
